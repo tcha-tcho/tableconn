@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Tableconn by tcha-tcho</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/tcha-tcho/tableconn">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Tableconn</h1>
+            <h2>A lightweight (1.8kb) connector for Google Spreadsheet Tables</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/tcha-tcho/tableconn/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/tcha-tcho/tableconn/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>Tableconn.js</h1>
+
+<p>A lightweight Google Spreadsheet Table connector</p>
+
+<h3>The Problem</h3>
+
+<p>I work for a major Brazilian newspaper (Estadão) and others may have the same problem as me. Large companies do not allow to change the header of the server to do CORS, not without months of meetings. This can be a bit stressful. Sometimes we just want to create a visualization with few data and be able to maintain the data from time to time.</p>
+
+<h3>The Advantage</h3>
+
+<p>I agree that in general terms is not a good idea to use JSONP. But in the case of GDocs maybe we could make an exception. This would allow, for example, that your code operate without requiring a server. Great advantage for beginners. :)</p>
+
+<p>I wrote a first implementation of how this might work. It groups the two main ways that google allows to download data from the tables. Via feeds and SQL query (<a href="https://developers.google.com/chart/interactive/docs/querylanguage">https://developers.google.com/chart/interactive/docs/querylanguage</a>). So the client does not need to download the entire table at once. That first implementation has less than 50 lines, but We can try to reduce more =)</p>
+
+<h3>Requirements</h3>
+
+<p>The table must be configured as public. The first row of the table must have the column names.</p>
+
+<h4>Restrictions</h4>
+
+<p>Google Spreadsheet does not allow more than 20MB or 400.000 cells. So this strategy does not replace a good database.</p>
+
+<h2>Usage</h2>
+
+<div class="highlight"><pre><span class="nx">TC</span><span class="p">.</span><span class="nx">load</span> <span class="p">({</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span> <span class="c1">//url or table key</span>
+    <span class="nx">sql</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span> <span class="c1">//table selection [optional]</span>
+    <span class="nx">as_feed</span><span class="o">:</span> <span class="kc">false</span> <span class="c1">//strategy used to download data [optional]</span>
+<span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//where magic happens</span>
+
+    <span class="c1">//if you need to filter your data</span>
+    <span class="nx">TC</span><span class="p">.</span><span class="nx">filter</span><span class="p">({</span><span class="nx">column_name</span><span class="o">:</span><span class="s2">"match"</span><span class="p">},</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">){</span>
+      <span class="c1">//'result' is a new array</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+</pre></div>
+
+<h3>D3js</h3>
+
+<p>The data structure is similar to that used by <a href="https://github.com/mbostock/d3">https://github.com/mbostock/d3</a> . Thus you can use the 'tableconn' integrated with your visualization!</p>
+
+<h3>Security</h3>
+
+<p>The URL is disassembled, reassembled and parsed with a single callback enabled and it will runs within the Tableconn</p>
+
+<h3>Testing</h3>
+
+<p>Please open "/test/test.html" at your browser</p>
+
+<p><strong>TO-DO</strong> <em>Include support for choose specific Sheets on table</em></p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/tcha-tcho">tcha-tcho</a> can be found on <a href="https://github.com/tcha-tcho/tableconn">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33720779-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
