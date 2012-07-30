@@ -1,0 +1,80 @@
+<html>
+<head>
+  <title>Tableconn testing</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./qunit-git.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="./qunit-git.js"></script>
+  <!--  <script src="../tableconn_min.js"></script> -->
+  <script src="../tableconn.js"></script>
+  <script type="text/javascript" >
+
+    test( "Is present", function() {
+      ok( typeof TC != "undefined", "Global is here!" );
+      ok( typeof Tableconn != "undefined", "Global is here!" );
+    });
+
+    function basic_test(data){
+      expect(7);
+      equal( data.errors,undefined, "We have no errors!" );
+      ok( data.length == 24, "We have all rows from table!" );
+      ok( typeof data[0] == "object", "The object is parsed!" );
+      equal( data[0].Escuderia, "Red Bull", "'Escuderia' is right");
+      equal( data[0].Piloto, "Sebastian Vettel" , "Piloto is right" );
+      equal( data[23].Escuderia, "Marussia", "'Escuderia' is right");
+      equal( data[23].Piloto, "Timo Glock" , "'Piloto' is right" );
+    }
+
+    //FIRST TEST BASIC
+    TC.load({url:"https://docs.google.com/spreadsheet/ccc?key=0AkZgtY9EM0w8dHdTY0tHWEY0WGkxWWV2aWhYeWJBSWc#gid=0"},function(data){
+      test( "Basic test", function() {
+        basic_test(data)
+      });
+
+      //SECOND TEST ADVANCED
+      TC.load({
+        url:"0AkZgtY9EM0w8dHdTY0tHWEY0WGkxWWV2aWhYeWJBSWc",
+        sql:"select B,D where B = 'Timo Glock'"
+      },function(data){
+        test( "Advanced test", function() {
+          expect(5);
+          equal( data.errors,undefined, "We have no errors!" );
+          ok( data.length == 1, "We have all rows from table!" );
+          ok( typeof data[0] == "object", "The object is parsed!" );
+          equal( data[0].Escuderia, "Marussia", "'Escuderia' is right");
+          equal( data[0].Piloto, "Timo Glock" , "Piloto is right" );
+        });
+
+        //FEEDS TEST
+        //FEEDS can't accept SQL statements
+        TC.load({
+          url:"0AkZgtY9EM0w8dHdTY0tHWEY0WGkxWWV2aWhYeWJBSWc",
+          as_feeds:true
+        },function(data){
+          test( "AS_FEEDS test", function() {
+            expect(1);
+            basic_test(data)
+          });
+
+          TC.filter({Piloto:"Timo Glock"},function(result){
+            test("Tableconn.filter() tests **Better to use SQL instead**",function(){
+              expect(4);
+              equal( result.length, 1, "1 row returned" );
+              equal( typeof result[0], "object", "is a object in a array" );
+              equal( result[0].Escuderia, "Marussia", "'Escuderia' is right");
+              equal( result[0].Piloto, "Timo Glock" , "Piloto is right" );
+            })
+          })
+
+        })
+
+      })
+
+    })
+
+  </script>
+</body>
+</html>
