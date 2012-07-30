@@ -18,7 +18,7 @@ Google Spreadsheet does not allow more than 20MB or 400.000 cells. So this strat
 ## Usage
 ```javascript
 TC.load ({
-    url: "", //url and table key
+    url: "", //url or table key
     sql: "", //table selection [optional]
     as_feed: false //strategy used to download data [optional]
 }, function (data) {
@@ -30,6 +30,9 @@ TC.load ({
     })
 })
 ```
+### D3js
+The data structure is similar to that used by https://github.com/mbostock/d3 . Thus, you can use the 'tableconn' integrated with your visualisation!
+
 ### Security
 The URL is disassembled, reassembled and parsed with a single callback enabled and it will runs within the Tableconn
 
