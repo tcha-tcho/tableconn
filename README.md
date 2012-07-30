@@ -31,7 +31,7 @@ TC.load ({
 })
 ```
 ### D3js
-The data structure is similar to that used by https://github.com/mbostock/d3 . Thus, you can use the 'tableconn' integrated with your visualisation!
+The data structure is similar to that used by https://github.com/mbostock/d3 . Thus, you can use the 'tableconn' integrated with your visualization!
 
 ### Security
 The URL is disassembled, reassembled and parsed with a single callback enabled and it will runs within the Tableconn
