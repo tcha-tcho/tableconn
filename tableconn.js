@@ -15,6 +15,7 @@ var Tableconn = (function (window,document,ss) {
     pub.sql      = "select *";
     pub.as_feeds = false;
     pub.gdata    = false;
+    pub.hosted   = false;
     pub.parsed   = [];
     for(arg in pub) {if(args[arg] !== undefined) pub[arg] = args[arg] }
   }
@@ -22,10 +23,14 @@ var Tableconn = (function (window,document,ss) {
   pub.set_gdata = function (_gdata){pub.gdata = _gdata};
   if(typeof this.google == "undefined") this.google = {visualization:{Query:{setResponse:pub.set_gdata}}};
 
-  function parse_google_url() {
-    var key = (pub.url.match(/http(s)*:/))?pub.url.match(/key=(.*?)(&|#)/i)[1] : pub.url;
-    var final_url = (pub.as_feeds)?("feeds/cells/" + key + "/od6/public/basic?") : ("tq?out=json&key=" + key + "&");
-    return ( "http://spreadsheets.google.com/" + final_url + "tq=" + encodeURIComponent(pub.sql) + "&alt=json-in-script&callback=Tableconn.set_gdata");
+  function parse_url() {
+    if (pub.url.match(/^[\/|\.]/) || pub.hosted) { //local access - you can keep the google data for high volume
+      return pub.url;
+    }else{
+      var key = (pub.url.match(/http(s)*:/))?pub.url.match(/key=(.*?)(&|#)/i)[1] : pub.url;
+      var final_url = (pub.as_feeds)?("feeds/cells/" + key + "/od6/public/basic?") : ("tq?out=json&key=" + key + "&");
+      return ( "http://spreadsheets.google.com/" + final_url + "tq=" + encodeURIComponent(pub.sql) + "&alt=json-in-script&callback=Tableconn.set_gdata" + "&s_id=" + (new Date().getTime()));
+    };
   }
   function is_header(entr){return ((entr.title.$t.length == 2) && (entr.title.$t.substr(1,1) == "1")); }
   function column_char(entr){return entr.title.$t.charAt(0)}
@@ -34,7 +39,7 @@ var Tableconn = (function (window,document,ss) {
     reset_args(args)
     var newScript = document.createElement('script');
     newScript.type = 'text/javascript';
-    newScript.src = parse_google_url() + "&s_id=" + (new Date().getTime());
+    newScript.src = parse_url();
     document.getElementsByTagName("head")[0].appendChild(newScript);
     safetyCounter = 0;
     var intervalId = setInterval(function(){
