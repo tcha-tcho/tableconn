@@ -78,7 +78,8 @@ var Tableconn = (function (window,document,ss) {
         }
       }else{
         for (var j = 0; j < entries[i].c.length; j++) {
-          append_data(i, gdata.table.cols[j].label, (entries[i].c[j])?entries[i].c[j].v:null)
+          var col_name = (gdata.table.cols[j].label || entries[0].c[j].v)
+          append_data(i, col_name, (entries[i].c[j])?entries[i].c[j].v:null)
         };
       };
     }
