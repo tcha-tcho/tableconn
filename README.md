@@ -20,6 +20,7 @@ Google Spreadsheet does not allow more than 20MB or 400.000 cells. So this strat
 TC.load ({
     url: "", //url or table key
     sql: "", //table selection [optional]
+    hosted: false, //you can use google response from your own server [optional] 
     as_feed: false //strategy used to download data [optional]
 }, function (data) {
     //where magic happens
