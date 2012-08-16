@@ -16,6 +16,7 @@ var Tableconn = (function (window,document,ss) {
     pub.as_feeds = false;
     pub.gdata    = false;
     pub.hosted   = false;
+    pub.parse    = true;
     pub.parsed   = [];
     for(arg in pub) {if(args[arg] !== undefined) pub[arg] = args[arg] }
   }
@@ -67,29 +68,33 @@ var Tableconn = (function (window,document,ss) {
   }
 
   pub.parse_raw_data = function(gdata,callback) {
-    if (gdata.status == "error"){ callback(gdata.errors[0]); return false }
-    var entries = (pub.as_feeds?gdata.feed.entry:gdata.table.rows), key_names = {};
-    pub.parsed = [];
-    function append_data(line,column,value){
-      if (typeof pub.parsed[line] == "undefined") pub.parsed[line] = {}
-      pub.parsed[line][column] = (value || null);
-    }
-    for (var i = 0; i < entries.length; i++) { //fill objects into arrays using tableconn formating
-      if (pub.as_feeds) {
-        if(is_header(entries[i])){
-          key_names[column_char(entries[i])] = entries[i].content.$t
-        } else {
-          append_data(parseInt(entries[i].title.$t.substr(1)), key_names[column_char(entries[i])], entries[i].content.$t)
-        }
-      }else{
-        for (var j = 0; j < entries[i].c.length; j++) {
-          var col_name = (gdata.table.cols[j].label || entries[0].c[j].v)
-          append_data(i, col_name, (entries[i].c[j])?entries[i].c[j].v:null)
+    if (pub.parse) {
+      if (gdata.status == "error"){ callback(gdata.errors[0]); return false }
+      var entries = (pub.as_feeds?gdata.feed.entry:gdata.table.rows), key_names = {};
+      pub.parsed = [];
+      function append_data(line,column,value){
+        if (typeof pub.parsed[line] == "undefined") pub.parsed[line] = {}
+        pub.parsed[line][column] = (value || null);
+      }
+      for (var i = 0; i < entries.length; i++) { //fill objects into arrays using tableconn formating
+        if (pub.as_feeds) {
+          if(is_header(entries[i])){
+            key_names[column_char(entries[i])] = entries[i].content.$t
+          } else {
+            append_data(parseInt(entries[i].title.$t.substr(1)), key_names[column_char(entries[i])], entries[i].content.$t)
+          }
+        }else{
+          for (var j = 0; j < entries[i].c.length; j++) {
+            var col_name = (gdata.table.cols[j].label || entries[0].c[j].v)
+            append_data(i, col_name, (entries[i].c[j])?entries[i].c[j].v:null)
+          };
         };
-      };
-    }
-    if(pub.as_feeds) pub.parsed.splice(0,2)
-    callback(pub.parsed);
+      }
+      if(pub.as_feeds) pub.parsed.splice(0,2)
+      callback(pub.parsed);
+    }else{
+      callback(gdata);
+    };
   };
   return pub;
 })(window,document,Tableconn);
