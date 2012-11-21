@@ -8,7 +8,8 @@ I work for a major Brazilian newspaper (Estadão) and others may have the same p
 I agree that in general terms is not a good idea to use JSONP. But in the case of GDocs maybe we could make an exception. This would allow, for example, that your code operate without requiring a server. Great advantage for beginners. :)
 
 I wrote a first implementation of how this might work. It groups the two main ways that google allows to download data from the tables. Via feeds and [SQL query](https://developers.google.com/chart/interactive/docs/querylanguage). So the client does not need to download the entire table at once. That first implementation has less than 50 lines, but We can try to reduce more =)
-`if you planning to use SQL: Google has a bug on retrieving tables using SQL. Insert a first column called 'ID' and a second row with '1'.`
+`if you planning to use SQL: Google has a bug on retrieving tables using SQL.`
+`Insert a first column called 'ID' and a second row with '1'.`
 
 ### Requirements
 The table must be configured as public. The first row of the table must have the column names.
