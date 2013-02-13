@@ -12,6 +12,7 @@ var Tableconn = (function (window,document,ss) {
   var pub = {};
   function reset_args(args){
     pub.url      = "";
+    pub.worksheet    = "0";
     pub.sql      = "select *";
     pub.as_feeds = false;
     pub.gdata    = false;
@@ -29,7 +30,8 @@ var Tableconn = (function (window,document,ss) {
       return pub.url;
     }else{
       var key = (pub.url.match(/http(s)*:/))?pub.url.match(/key=(.*?)(&|#)/i)[1] : pub.url;
-      var final_url = (pub.as_feeds)?("feeds/cells/" + key + "/od6/public/basic?") : ("tq?out=json&key=" + key + "&");
+      var worksheet = (pub.url.match(/http(s)*:/))?pub.url.match(/gid=(\d+)/i)[1] : pub.worksheet;
+      var final_url = (pub.as_feeds)?("feeds/cells/" + key + "/" + (Number(worksheet) + 1).toString() + "/public/basic?") : ("tq?out=json&key=" + key + "&gid=" + worksheet + "&");
       return ( "http://spreadsheets.google.com/" + final_url + "tq=" + encodeURIComponent(pub.sql) + "&alt=json-in-script&callback=Tableconn.set_gdata" + "&s_id=" + (new Date().getTime()));
     };
   }
